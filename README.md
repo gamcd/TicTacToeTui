@@ -13,14 +13,14 @@
 diagram for playing
 
 
-## to Play:
-Have cargo and git installed
+## To play:
+- Have cargo and git installed
 
-clone this repository
+- clone this repository
 ```
 git clone https://github.com/gamcd/TicTacToeTui.git
 ```
-Run the project
+- Run the project
 ```
 cargo run
 ```
