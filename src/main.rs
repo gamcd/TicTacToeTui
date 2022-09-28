@@ -1,130 +1,7 @@
-
-fn main() {
-    interactive_game();
-}
-
-fn interactive_game() {
-    let mut oturn = false;
-
-    loop {
-        let mut board = Board::new();
-        if oturn {
-            board.turn = Owner::O;
-        }
-
-        println!("\n==========================================\n");
-        println!("\nWelcome to Tic Tac Toe");
-        println!("To play, give each turn prompt a number between 1 and 9 that looks like this:\n");
-        println!("  1 | 2 | 3\n  -----------\n  4 | 5 | 6\n  -----------\n  7 | 8 | 9\n");
-        println!("Player {} will go first\n", board.turn.as_char());
-        println!("{}", board.to_string());
-
-        while !board.game_over().to_bool() {
-            println!("\n\n==========================================");
-            let mut good_turn = false;
-            let mut turn: usize = 0;
-
-            while !good_turn {
-                println!("\nPlayer {}'s turn, input a number:", board.turn.as_char());
-
-                let mut input = String::new();
-                std::io::stdin().read_line(&mut input).unwrap();
-                input.remove(input.len() - 1);
-                let num = input.parse::<u8>();
-
-                match num {
-                    Ok(n) if 0 < n && n < 10 => {
-                        turn = n as usize;
-                        good_turn = true;
-                    }
-                    Ok(_) => println!("Please give a number between 1 and 9"),
-                    Err(_) => {
-                        println!("Make sure you are putting in a number, please try again")
-                    }
-                }
-            }
-
-            match board.play(turn - 1) {
-                TurnResponse::Good(msg) => println!("\n{}\n", msg),
-                TurnResponse::Bad(msg) => {
-                    println!("\n{}\n", msg);
-                    continue;
-                }
-            };
-
-            println!("\n{}", board.to_string());
-            println!("==========================================\n\n");
-        }
-
-        println!("\nGame is Over\n");
-
-        if let TurnResponse::Good(msg) = board.game_over()  {
-            println!("{}\n", msg)
-        }
-
-
-        let mut good_ans = false;
-        while !good_ans {
-            println!("play again?");
-            println!("y or n");
-            let mut buff: String = String::new();
-            std::io::stdin()
-                .read_line(&mut buff).unwrap();
-
-            match buff.as_ref() {
-                "y\n" | "yes\n" => good_ans = true,
-                "n\n" | "no\n" => break,
-                "enter" | "e" => println!("testing"),
-                _ => println!("\ntry again\n"),
-            }
-        }
-
-        if good_ans {
-            oturn = !oturn;
-            continue;
-        } else {
-            println!("Thanks for playing");
-            break;
-        }
-    }
-}
-
 struct Board {
     board: [Owner; 9],
     turn: Owner,
     count: u8,
-}
-
-#[derive(Clone, Copy)]
-enum Owner {
-    Empty,
-    X,
-    O,
-}
-
-impl Owner {
-    fn as_char(&self) -> &str {
-        match self {
-            Owner::Empty => " ",
-            Owner::O => "O",
-            Owner::X => "X",
-        }
-    }
-}
-
-enum TurnResponse {
-    Good(String),
-    Bad(String),
-}
-
-impl TurnResponse {
-
-    fn to_bool(&self) -> bool {
-        match self {
-            TurnResponse::Good(_) => true,
-            TurnResponse::Bad(_) => false,
-        }
-    }
 }
 
 impl Board {
@@ -137,8 +14,6 @@ impl Board {
     }
 
     fn game_over(&self) -> TurnResponse {
-       
-
         let win_conditions = [
             [0, 2, 0, 1, 2, 0, 3, 6],
             [4, 4, 3, 4, 5, 1, 4, 7],
@@ -225,4 +100,123 @@ impl Board {
             self.board[8].as_char(),
         )
     }
+}
+
+#[derive(Clone, Copy)]
+enum Owner {
+    Empty,
+    X,
+    O,
+}
+
+impl Owner {
+    fn as_char(&self) -> &str {
+        match self {
+            Owner::Empty => " ",
+            Owner::O => "O",
+            Owner::X => "X",
+        }
+    }
+}
+
+enum TurnResponse {
+    Good(String),
+    Bad(String),
+}
+
+impl TurnResponse {
+    fn to_bool(&self) -> bool {
+        match self {
+            TurnResponse::Good(_) => true,
+            TurnResponse::Bad(_) => false,
+        }
+    }
+}
+
+fn interactive_game() {
+    let mut oturn = false;
+
+    loop {
+        let mut board = Board::new();
+        if oturn {
+            board.turn = Owner::O;
+        }
+
+        println!("\n==========================================\n");
+        println!("\nWelcome to Tic Tac Toe");
+        println!("To play, give each turn prompt a number between 1 and 9 that looks like this:\n");
+        println!("  1 | 2 | 3\n  -----------\n  4 | 5 | 6\n  -----------\n  7 | 8 | 9\n");
+        println!("Player {} will go first\n", board.turn.as_char());
+        println!("{}", board.to_string());
+
+        while !board.game_over().to_bool() {
+            println!("\n\n==========================================");
+            let mut good_turn = false;
+            let mut turn: usize = 0;
+
+            while !good_turn {
+                println!("\nPlayer {}'s turn, input a number:", board.turn.as_char());
+
+                let mut input = String::new();
+                std::io::stdin().read_line(&mut input).unwrap();
+                input.remove(input.len() - 1);
+                let num = input.parse::<u8>();
+
+                match num {
+                    Ok(n) if 0 < n && n < 10 => {
+                        turn = n as usize;
+                        good_turn = true;
+                    }
+                    Ok(_) => println!("Please give a number between 1 and 9"),
+                    Err(_) => {
+                        println!("Make sure you are putting in a number, please try again")
+                    }
+                }
+            }
+
+            match board.play(turn - 1) {
+                TurnResponse::Good(msg) => println!("\n{}\n", msg),
+                TurnResponse::Bad(msg) => {
+                    println!("\n{}\n", msg);
+                    continue;
+                }
+            };
+
+            println!("\n{}", board.to_string());
+            println!("==========================================\n\n");
+        }
+
+        println!("\nGame is Over\n");
+
+        if let TurnResponse::Good(msg) = board.game_over() {
+            println!("{}\n", msg)
+        }
+
+        let mut good_ans = false;
+        while !good_ans {
+            println!("play again?");
+            println!("y or n");
+            let mut buff: String = String::new();
+            std::io::stdin().read_line(&mut buff).unwrap();
+
+            match buff.as_ref() {
+                "y\n" | "yes\n" => good_ans = true,
+                "n\n" | "no\n" => break,
+                "enter" | "e" => println!("testing"),
+                _ => println!("\ntry again\n"),
+            }
+        }
+
+        if good_ans {
+            oturn = !oturn;
+            continue;
+        } else {
+            println!("Thanks for playing");
+            break;
+        }
+    }
+}
+
+fn main() {
+    interactive_game();
 }
