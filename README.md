@@ -14,7 +14,7 @@ diagram for playing
 
 
 ## to Play:
-- Have cargo and git installed
+Have cargo and git installed
 
 clone this repository
 ```
